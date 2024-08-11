@@ -1,5 +1,11 @@
 #! /usr/bin/env node
 
+import dotenv from "dotenv";
+
+dotenv.config({
+  override: true,
+});
+
 import { program } from "commander";
 
 const instance = program
@@ -10,6 +16,10 @@ const instance = program
 
 instance.command("install", "Perform installation of the tool", {
   executableFile: "install",
+});
+
+instance.command("users", "Requests of users", {
+  executableFile: "users",
 });
 
 program.parse();

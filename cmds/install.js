@@ -1,7 +1,12 @@
 import { input, select, password } from "@inquirer/prompts";
-import netrc from "../libs/netrc.js";
+import { get, store } from "../libs/netrc.js";
+import { decrypt, generateSecretKey } from "../libs/crypt.js";
 
-/**
+// Generate secretKey if necessary
+if (!process.env.SECRET_KEY) {
+  generateSecretKey();
+}
+
 const authType = await select({
   message: "How you want to be authenticated?",
   choices: [
@@ -41,17 +46,22 @@ switch (authType) {
       mask: true,
     });
 
-    netrc.store({
-      machine: "atlassian.com",
+    store({
+      machine: "github.com",
       login: email,
       password: pass,
     });
+    break;
+  }
+  case "accessToken": {
+    const accessToken = await input({
+      message: "Enter your access token: ",
+      required: true,
+    });
 
-    console.log(netrc.parse());
-
-    console.log(
-      "All the data will be stored in your computer, it will never leave it",
-    );
+    store({
+      machine: "github.com",
+      password: accessToken,
+    });
   }
 }
-*/
